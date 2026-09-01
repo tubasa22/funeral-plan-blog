@@ -2,10 +2,23 @@ const menuButton = document.querySelector('[data-menu-button]');
 const navigation = document.querySelector('[data-nav]');
 const toTopButton = document.querySelector('[data-to-top]');
 const year = document.querySelector('[data-year]');
+const header = document.querySelector('[data-header]');
 
 if (year) year.textContent = new Date().getFullYear();
 
 if (menuButton && navigation) {
+  const closeMenu = () => {
+    navigation.classList.remove('is-open');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.querySelector('.sr-only').textContent = '메뉴 열기';
+  };
+
+  const scrollToTarget = (target) => {
+    const headerHeight = header ? header.offsetHeight : 0;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
+    window.scrollTo({ top: Math.max(targetTop, 0), behavior: 'smooth' });
+  };
+
   menuButton.addEventListener('click', () => {
     const isOpen = navigation.classList.toggle('is-open');
     menuButton.setAttribute('aria-expanded', String(isOpen));
@@ -13,10 +26,20 @@ if (menuButton && navigation) {
   });
 
   navigation.addEventListener('click', (event) => {
-    if (!event.target.matches('a')) return;
-    navigation.classList.remove('is-open');
-    menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.querySelector('.sr-only').textContent = '메뉴 열기';
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const targetId = link.getAttribute('href');
+    const target = targetId === '#top' ? document.getElementById('top') : document.querySelector(targetId);
+    if (!target) return;
+
+    event.preventDefault();
+    closeMenu();
+    scrollToTarget(target);
+
+    if (history.pushState) {
+      history.pushState(null, '', targetId);
+    }
   });
 }
 
