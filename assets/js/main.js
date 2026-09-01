@@ -3,8 +3,19 @@ const navigation = document.querySelector('[data-nav]');
 const toTopButton = document.querySelector('[data-to-top]');
 const year = document.querySelector('[data-year]');
 const header = document.querySelector('[data-header]');
+const backgroundMusic = document.querySelector('[data-background-music]');
+const musicToggle = document.querySelector('[data-music-toggle]');
 
 if (year) year.textContent = new Date().getFullYear();
+
+const openedAtContactHash = window.location.hash === '#contact';
+
+if (openedAtContactHash) {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+  window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  window.addEventListener('load', () => window.scrollTo(0, 0), { once: true });
+}
 
 if (menuButton && navigation) {
   const closeMenu = () => {
@@ -54,4 +65,28 @@ if (toTopButton) {
   toTopButton.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+}
+
+if (backgroundMusic && musicToggle) {
+  const updateMusicButton = (isPlaying) => {
+    musicToggle.classList.toggle('is-playing', isPlaying);
+    musicToggle.setAttribute('aria-pressed', String(isPlaying));
+    musicToggle.textContent = isPlaying ? '❚❚ 배경음 끄기' : '♪ 배경음 켜기';
+  };
+
+  musicToggle.addEventListener('click', async () => {
+    if (backgroundMusic.paused) {
+      try {
+        await backgroundMusic.play();
+        updateMusicButton(true);
+      } catch (_) {
+        updateMusicButton(false);
+      }
+    } else {
+      backgroundMusic.pause();
+      updateMusicButton(false);
+    }
+  });
+
+  backgroundMusic.addEventListener('ended', () => updateMusicButton(false));
 }
