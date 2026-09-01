@@ -5,6 +5,9 @@ const year = document.querySelector('[data-year]');
 const header = document.querySelector('[data-header]');
 const backgroundMusic = document.querySelector('[data-background-music]');
 const musicToggle = document.querySelector('[data-music-toggle]');
+const musicFeedback = document.querySelector('[data-music-feedback]');
+const emailAction = document.querySelector('[data-email-action]');
+const contactFeedback = document.querySelector('[data-contact-feedback]');
 
 if (year) year.textContent = new Date().getFullYear();
 
@@ -68,6 +71,13 @@ if (toTopButton) {
 }
 
 if (backgroundMusic && musicToggle) {
+  const showMusicFeedback = (message) => {
+    if (!musicFeedback) return;
+    musicFeedback.textContent = message;
+    musicFeedback.classList.add('is-visible');
+    window.setTimeout(() => musicFeedback.classList.remove('is-visible'), 4200);
+  };
+
   const updateMusicButton = (isPlaying) => {
     musicToggle.classList.toggle('is-playing', isPlaying);
     musicToggle.setAttribute('aria-pressed', String(isPlaying));
@@ -77,16 +87,37 @@ if (backgroundMusic && musicToggle) {
   musicToggle.addEventListener('click', async () => {
     if (backgroundMusic.paused) {
       try {
+        backgroundMusic.load();
         await backgroundMusic.play();
         updateMusicButton(true);
+        showMusicFeedback('배경음이 재생되고 있습니다.');
       } catch (_) {
         updateMusicButton(false);
+        showMusicFeedback('음원을 재생하지 못했습니다. GitHub에 assets/audio 폴더가 업로드되었는지 확인해 주세요.');
       }
     } else {
       backgroundMusic.pause();
       updateMusicButton(false);
+      showMusicFeedback('배경음을 멈췄습니다.');
     }
   });
 
   backgroundMusic.addEventListener('ended', () => updateMusicButton(false));
+  backgroundMusic.addEventListener('error', () => {
+    updateMusicButton(false);
+    showMusicFeedback('음원 파일을 찾지 못했습니다. 최신 ZIP의 assets/audio 폴더를 함께 업로드해 주세요.');
+  });
+}
+
+if (emailAction && contactFeedback) {
+  emailAction.addEventListener('click', () => {
+    const email = 'kincaredesk@gmail.com';
+    contactFeedback.textContent = '메일 앱이 열리지 않으면 이메일 주소가 복사됩니다.';
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(email)
+        .then(() => { contactFeedback.textContent = '이메일 주소가 복사되었습니다: ' + email; })
+        .catch(() => {});
+    }
+  });
 }
