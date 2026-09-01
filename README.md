@@ -15,6 +15,8 @@ funeral-blog/
 │       ├── planning-symbol.png
 │       ├── funeral-home.png
 │       ├── funeral-options.png
+│       ├── cremation.png
+│       ├── burial.png
 │       └── closing-garden.png
 ├── content/content.md
 └── README.md
