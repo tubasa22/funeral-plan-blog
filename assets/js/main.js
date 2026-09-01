@@ -107,6 +107,22 @@ if (backgroundMusic && musicToggle) {
     updateMusicButton(false);
     showMusicFeedback('음원 파일을 찾지 못했습니다. 최신 ZIP의 assets/audio 폴더를 함께 업로드해 주세요.');
   });
+
+  const startBackgroundMusic = async () => {
+    try {
+      await backgroundMusic.play();
+      updateMusicButton(true);
+    } catch (_) {
+      updateMusicButton(false);
+    }
+  };
+
+  // Start immediately where the browser permits it. Mobile browsers that
+  // block audible autoplay start it on the visitor's first screen touch.
+  startBackgroundMusic();
+  document.addEventListener('pointerdown', () => {
+    if (backgroundMusic.paused) startBackgroundMusic();
+  }, { once: true, passive: true });
 }
 
 if (emailAction && contactFeedback) {
