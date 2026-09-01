@@ -243,6 +243,11 @@ li { margin-bottom: .65rem; }
 .fund-flow small { color: rgba(255,255,255,.65); font-size: .73rem; line-height: 1.55; }
 .fund-flow .fund-center { color: var(--navy); background: #fff; }
 .fund-flow .fund-center small { color: var(--muted); }
+.role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+.role-grid article { padding: 1.5rem; background: var(--wash); border-top: 3px solid var(--gold); }
+.role-grid span { color: var(--gold); font-size: .76rem; font-weight: 800; letter-spacing: .1em; }
+.role-grid h3 { margin: .55rem 0 .75rem; font-size: 1.12rem; }
+.role-grid p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.8; }
 .source-note { color: var(--muted); font-size: .82rem; }
 .eligibility-visual { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 2rem; padding: 2rem; background: var(--wash); }
 .eligibility-visual > div { padding: 1.3rem .7rem; text-align: center; background: #fff; border: 1px solid var(--line); }
@@ -313,6 +318,8 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
   .method-icon { width: 44px; height: 44px; }
   .fund-flow { grid-template-columns: 1fr; margin-left: -20px; margin-right: -20px; }
   .fund-flow > i { transform: rotate(90deg); text-align: center; }
+  .role-grid { grid-template-columns: 1fr; gap: .8rem; }
+  .role-grid article { padding: 1.35rem; }
   .eligibility-visual { grid-template-columns: 1fr; padding: 1rem; }
   .eligibility-visual p { grid-column: 1; }
   .number-list li { padding-top: 1.3rem; padding-bottom: 1.3rem; }
