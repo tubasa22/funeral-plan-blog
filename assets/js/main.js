@@ -8,6 +8,7 @@ const musicToggle = document.querySelector('[data-music-toggle]');
 const musicFeedback = document.querySelector('[data-music-feedback]');
 const emailAction = document.querySelector('[data-email-action]');
 const contactFeedback = document.querySelector('[data-contact-feedback]');
+const isKorean = document.documentElement.lang.startsWith('ko');
 
 if (year) year.textContent = new Date().getFullYear();
 
@@ -24,7 +25,7 @@ if (menuButton && navigation) {
   const closeMenu = () => {
     navigation.classList.remove('is-open');
     menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.querySelector('.sr-only').textContent = '메뉴 열기';
+    menuButton.querySelector('.sr-only').textContent = isKorean ? '메뉴 열기' : 'Open menu';
   };
 
   const scrollToTarget = (target) => {
@@ -36,7 +37,7 @@ if (menuButton && navigation) {
   menuButton.addEventListener('click', () => {
     const isOpen = navigation.classList.toggle('is-open');
     menuButton.setAttribute('aria-expanded', String(isOpen));
-    menuButton.querySelector('.sr-only').textContent = isOpen ? '메뉴 닫기' : '메뉴 열기';
+    menuButton.querySelector('.sr-only').textContent = isOpen ? (isKorean ? '메뉴 닫기' : 'Close menu') : (isKorean ? '메뉴 열기' : 'Open menu');
   });
 
   navigation.addEventListener('click', (event) => {
@@ -81,7 +82,7 @@ if (backgroundMusic && musicToggle) {
   const updateMusicButton = (isPlaying) => {
     musicToggle.classList.toggle('is-playing', isPlaying);
     musicToggle.setAttribute('aria-pressed', String(isPlaying));
-    musicToggle.textContent = isPlaying ? '❚❚ 배경음 끄기' : '♪ 배경음 켜기';
+    musicToggle.textContent = isPlaying ? (isKorean ? '❚❚ 배경음 끄기' : '❚❚ Pause music') : (isKorean ? '♪ 배경음 켜기' : '♪ Play music');
   };
 
   musicToggle.addEventListener('click', async () => {
@@ -90,22 +91,22 @@ if (backgroundMusic && musicToggle) {
         backgroundMusic.load();
         await backgroundMusic.play();
         updateMusicButton(true);
-        showMusicFeedback('배경음이 재생되고 있습니다.');
+        showMusicFeedback(isKorean ? '배경음이 재생되고 있습니다.' : 'Background music is playing.');
       } catch (_) {
         updateMusicButton(false);
-        showMusicFeedback('음원을 재생하지 못했습니다. GitHub에 assets/audio 폴더가 업로드되었는지 확인해 주세요.');
+        showMusicFeedback(isKorean ? '음원을 재생하지 못했습니다. GitHub에 assets/audio 폴더가 업로드되었는지 확인해 주세요.' : 'Music could not play. Please confirm that the assets/audio folder was uploaded.');
       }
     } else {
       backgroundMusic.pause();
       updateMusicButton(false);
-      showMusicFeedback('배경음을 멈췄습니다.');
+      showMusicFeedback(isKorean ? '배경음을 멈췄습니다.' : 'Background music paused.');
     }
   });
 
   backgroundMusic.addEventListener('ended', () => updateMusicButton(false));
   backgroundMusic.addEventListener('error', () => {
     updateMusicButton(false);
-    showMusicFeedback('음원 파일을 찾지 못했습니다. 최신 ZIP의 assets/audio 폴더를 함께 업로드해 주세요.');
+    showMusicFeedback(isKorean ? '음원 파일을 찾지 못했습니다. 최신 ZIP의 assets/audio 폴더를 함께 업로드해 주세요.' : 'Music file not found. Please upload the assets/audio folder from the latest ZIP.');
   });
 
   const startBackgroundMusic = async () => {
@@ -128,11 +129,11 @@ if (backgroundMusic && musicToggle) {
 if (emailAction && contactFeedback) {
   emailAction.addEventListener('click', () => {
     const email = 'kincaredesk@gmail.com';
-    contactFeedback.textContent = '메일 앱이 열리지 않으면 이메일 주소가 복사됩니다.';
+    contactFeedback.textContent = isKorean ? '메일 앱이 열리지 않으면 이메일 주소가 복사됩니다.' : 'If your email app does not open, the address will be copied.';
 
     if (navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(email)
-        .then(() => { contactFeedback.textContent = '이메일 주소가 복사되었습니다: ' + email; })
+        .then(() => { contactFeedback.textContent = (isKorean ? '이메일 주소가 복사되었습니다: ' : 'Email address copied: ') + email; })
         .catch(() => {});
     }
   });
